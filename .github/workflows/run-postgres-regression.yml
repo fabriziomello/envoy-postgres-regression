@@ -29,6 +29,7 @@ jobs:
         run: |
           cd postgres
           make -j4 install
+          make -j4 -C contrib install
 
       - name: create new cluster
         run: |
