@@ -55,6 +55,8 @@ jobs:
 
       - name: build envoyproxy
         run: |
+          ls -al && ls -al bin && ls -al bin/clang10
+          export PATH=bin/clang10/bin:$PATH
           cd envoy
           bazel/setup_clang.sh bin/clang10
           bazelisk shutdown
