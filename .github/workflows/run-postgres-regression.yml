@@ -1,7 +1,7 @@
 ---
 name: Run PostgreSQL Regression Tests
 
-on: [workflow_dispatch]
+on: [push, workflow_dispatch]
 
 jobs:
   pg-regression:
@@ -23,7 +23,7 @@ jobs:
       - name: configure postgres build
         run: |
           cd postgres
-          ./configure --prefix=./pgsql --with-python --with-openssl
+          ./configure --prefix=/tmp/pgsql --with-python --with-openssl
 
       - name: build and install postgres
         run: |
@@ -33,10 +33,10 @@ jobs:
 
       - name: create new cluster
         run: |
-          mkdir data
-          chmod 0700 data
-          ./pgsql/bin/initdb -D data
-          ./pgsql/bin/pg_ctl -D data -l data/postgresql.log start
+          mkdir /tmp/data
+          chmod 0700 /tmp/data
+          /tmp/pgsql/bin/initdb -D /tmp/data
+          /tmp/pgsql/bin/pg_ctl -D /tmp/data -l /tmp/data/postgresql.log start
           ps faux | grep postgres
 
       - name: ls
