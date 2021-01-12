@@ -38,8 +38,19 @@ jobs:
           /tmp/pgsql/bin/initdb -D /tmp/data -A trust
           /tmp/pgsql/bin/pg_ctl -D /tmp/data -l /tmp/data/postgresql.log start
 
+      - name: checkout envoyproxy repo
+        uses: actions/checkout@v2
+        with:
+          repository: envoyproxy/envoy
+          path: envoy
+
       - name: run postgres regression tests
         run: |
           cd postgres
           PGPORT=5432 make installcheck
           PGPORT=5432 make -C contrib installcheck
+
+      - name: ls
+        run: |
+          ls -al
+          ls -al ${HOME}
