@@ -22,16 +22,17 @@ jobs:
 
       - name: configure postgres build
         run: |
-          cd ${HOME}/postgres
+          cd postgres
           ./configure --prefix=${HOME}/pgsql --with-python --with-openssl
 
       - name: build and install postgres
         run: |
-          cd ${HOME}/postgres
+          cd postgres
           make
           make install
 
       - name: ls
         run: |
           ls -al
-          echo $HOME
+          echo ${PWD}
+          echo ${HOME}
