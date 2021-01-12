@@ -1,13 +1,7 @@
 ---
 name: Run PostgreSQL Regression Tests
 
-on:
-  push:
-    branches:
-      - master
-    pull_request:
-      branches:
-        - master
+on: [push, workflow_dispatch]
 
 jobs:
   pg-regression:
