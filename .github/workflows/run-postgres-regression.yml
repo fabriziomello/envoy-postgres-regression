@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: install postgres build dependencies
         run: |
-          sudo apt install -y bison flex zlib1g zlib1g-dev pkg-config \
+          sudo apt-get install -y bison flex zlib1g zlib1g-dev pkg-config \
             libssl-dev libreadline-dev
 
       - name: checkout postgres repo
@@ -20,6 +20,12 @@ jobs:
           repository: postgres/postgres
           path: postgres
 
+      - name: configure postgres build
+        run: |
+          cd postgres
+          ./configure --prefix=${HOME}/pgsql
+
       - name: ls
         run: |
           ls -al
+          echo $HOME
