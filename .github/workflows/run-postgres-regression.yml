@@ -9,10 +9,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: install postgres build dependencies
+      - name: install postgres and envoyproxy build dependencies
         run: |
+          sudo apt-get update -y
           sudo apt-get install -y bison flex zlib1g zlib1g-dev pkg-config \
-            libssl-dev libreadline-dev
+            libssl-dev libreadline-dev libtool cmake automake autoconf make \
+            ninja-build curl unzip virtualenv openjdk-11-jdk build-essential \
+            libc++1
+          mkdir -p bin/clang10
+          cd bin/clang10
+          wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+          tar -xf clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
+            --strip-components 1
+          export PATH=bin/clang10/bin:$PATH
 
       - name: checkout postgres repo
         uses: actions/checkout@v2
@@ -43,6 +52,11 @@ jobs:
         with:
           repository: envoyproxy/envoy
           path: envoy
+
+      - name: build envoyproxy
+        run: |
+          bazel/setup_clang.sh bin/clang10
+          bazelisk shutdown
 
       - name: run postgres regression tests
         run: |
