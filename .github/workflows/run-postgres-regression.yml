@@ -1,0 +1,31 @@
+---
+name: Run PostgreSQL Regression Tests
+
+on:
+  push:
+    branches:
+      - master
+    pull_request:
+      branches:
+        - master
+
+jobs:
+  pg-regression:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: install postgres build dependencies
+        run: |
+          sudo apt install -y bison flex zlib1g zlib1g-dev pkg-config \
+            libssl-dev libreadline-dev
+
+      - name: checkout postgres repo
+        uses: actions/checkout@v2
+        with:
+          repository: postgres/postgres
+          path: postgres
+
+      - name: ls
+        run: |
+          ls -al
