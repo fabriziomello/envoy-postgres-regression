@@ -28,20 +28,17 @@ jobs:
       - name: build and install postgres
         run: |
           cd postgres
-          make
-          make install
+          make -j4 install
 
       - name: create new cluster
         run: |
           mkdir /tmp/data
           chmod 0700 /tmp/data
-          /tmp/pgsql/bin/initdb -D /tmp/data
+          /tmp/pgsql/bin/initdb -D /tmp/data -A trust
           /tmp/pgsql/bin/pg_ctl -D /tmp/data -l /tmp/data/postgresql.log start
-          ps faux | grep postgres
 
-      - name: ls
+      - name: run postgres regression tests
         run: |
-          ls -al
-          echo ${PWD}
-          echo ${HOME}
-          ls -al ${HOME}
+          cd postgres
+          PGPORT=5432 make installcheck
+          PGPORT=5432 make -C contrib installcheck
