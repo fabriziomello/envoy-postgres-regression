@@ -23,48 +23,58 @@ jobs:
             --strip-components 1
           export PATH=bin/clang10/bin:$PATH
 
-      - name: checkout postgres repo
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Checkout postgres repository
         uses: actions/checkout@v2
         with:
           repository: postgres/postgres
           path: postgres
+          fetch-depth: 2
 
-      - name: configure postgres build
+      - name: Configure PostgreSQL build
         run: |
           cd postgres
           ./configure --prefix=/tmp/pgsql --with-python --with-openssl
 
-      - name: build and install postgres
+      - name: Build and install PostgreSQL
         run: |
           cd postgres
           make -j4 install
           make -j4 -C contrib install
 
-      - name: create new cluster
+      - name: Create new PostgreSQL cluster
         run: |
           mkdir /tmp/data
           chmod 0700 /tmp/data
           /tmp/pgsql/bin/initdb -D /tmp/data -A trust
           /tmp/pgsql/bin/pg_ctl -D /tmp/data -l /tmp/data/postgresql.log start
 
-      - name: checkout envoyproxy repo
-        uses: actions/checkout@v2
-        with:
-          repository: envoyproxy/envoy
-          path: envoy
+      # - name: Checkout EnvoyProxy repository
+      #   uses: actions/checkout@v2
+      #   with:
+      #     repository: envoyproxy/envoy
+      #     path: envoy
+      #     fetch-depth: 2
 
-      - name: build envoyproxy
-        run: |
-          ls -al && ls -al bin && ls -al bin/clang10
-          export PATH=bin/clang10/bin:$PATH
-          cd envoy
-          bazel/setup_clang.sh ../bin/clang10
-          bazelisk shutdown
-          bazelisk build -c fastbuild --spawn_strategy=local \
-            --discard_analysis_cache --nouse_action_cache --config clang \
-            --config libc++ //source/exe:envoy-static
+      # - name: Build EnvoyProxy
+      #   run: |
+      #     ls -al && ls -al bin && ls -al bin/clang10
+      #     export PATH=bin/clang10/bin:$PATH
+      #     cd envoy
+      #     bazel/setup_clang.sh ../bin/clang10
+      #     bazelisk shutdown
+      #     bazelisk build -c fastbuild --spawn_strategy=local \
+      #       --discard_analysis_cache --nouse_action_cache --config clang \
+      #       --config libc++ //source/exe:envoy-static
 
-      - name: run postgres regression tests
+      - name: Install getenvoy
+        run: curl -L https://getenvoy.io/cli | bash -s -- -b /usr/local/bin
+
+      - name: Run PostgreSQL regression tests
         run: |
           cd postgres
           PGPORT=5432 make installcheck
