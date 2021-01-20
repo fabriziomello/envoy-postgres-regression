@@ -72,13 +72,16 @@ jobs:
       #       --config libc++ //source/exe:envoy-static
 
       - name: Install getenvoy
-        run: curl -L https://getenvoy.io/cli | bash -s -- -b /usr/local/bin
+        run: curl -L https://getenvoy.io/cli | bash -s -- -b .
+
+      - name: Run EnvoyProxy
+        run: ./getenvoy run standard:1.17.0 -- -c envoy_postgres.yml
 
       - name: Run PostgreSQL regression tests
         run: |
           cd postgres
-          PGPORT=5432 make installcheck
-          PGPORT=5432 make -C contrib installcheck
+          PGPORT=54322 make installcheck
+          PGPORT=54322 make -C contrib installcheck
 
       - name: ls
         run: |
