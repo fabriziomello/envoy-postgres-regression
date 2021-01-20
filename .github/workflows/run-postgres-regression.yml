@@ -80,8 +80,8 @@ jobs:
       - name: Run PostgreSQL regression tests
         run: |
           cd postgres
-          PGPORT=54322 make installcheck
-          PGPORT=54322 make -C contrib installcheck
+          PGPORT=54322 PGHOST=localhost make installcheck
+          PGPORT=54322 PGHOST=localhost make -C contrib installcheck
 
       - name: ls
         run: |
