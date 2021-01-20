@@ -75,7 +75,7 @@ jobs:
         run: curl -L https://getenvoy.io/cli | bash -s -- -b .
 
       - name: Run EnvoyProxy
-        run: ./getenvoy run standard:1.17.0 -- -c envoy_postgres.yaml
+        run: ./getenvoy run standard:1.17.0 -- -c envoy_postgres.yaml &
 
       - name: Run PostgreSQL regression tests
         run: |
