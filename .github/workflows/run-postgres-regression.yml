@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: install postgres and envoyproxy build dependencies
+      - name: Install build dependencies
         run: |
           sudo apt-get update -y
           sudo apt-get install -y bison flex zlib1g zlib1g-dev pkg-config \
@@ -73,7 +73,7 @@ jobs:
 
       - name: Run EnvoyProxy
         run: |
-          ./bazel-bin/source/exe/envoy-static -c ../envoy_postgres.yaml &
+          ./envoy/bazel-bin/source/exe/envoy-static -c envoy_postgres.yaml &
 
       # - name: Install getenvoy
       #   run: curl -L https://getenvoy.io/cli | bash -s -- -b .
