@@ -5,7 +5,7 @@ ENVOY_BINARY="${PWD}/envoy/bazel-bin/source/exe/envoy-static"
 
 for ENVOY_CONF in *.yaml
 do
-    echo "${ENVOY_BINARY} -c ${ENVOY_CONF} &"
+    "${ENVOY_BINARY}" -c "${ENVOY_CONF}" &
     ENVOY_PID=$(pidof envoy)
 
     cd "${PWD}"/postgres || exit
