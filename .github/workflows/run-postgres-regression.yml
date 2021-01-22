@@ -71,9 +71,9 @@ jobs:
             --discard_analysis_cache --nouse_action_cache --config clang \
             --config libc++ //source/exe:envoy-static
 
-      - name: Run EnvoyProxy
-        run: |
-          ./envoy/bazel-bin/source/exe/envoy-static -c envoy_postgres.yaml &
+      # - name: Run EnvoyProxy
+      #   run: |
+      #     ./envoy/bazel-bin/source/exe/envoy-static -c envoy_postgres.yaml &
 
       # - name: Install getenvoy
       #   run: curl -L https://getenvoy.io/cli | bash -s -- -b .
@@ -83,14 +83,12 @@ jobs:
       #     ./getenvoy fetch standard:1.17.0
       #     ./getenvoy run standard:1.17.0 -- -c envoy_postgres.yaml &
 
-      - name: Run PostgreSQL regression tests
-        run: |
-          cd postgres
-          PGPORT=54322 PGHOST=localhost make installcheck
-          PGPORT=54322 PGHOST=localhost make -C contrib installcheck
-
       - name: ls
         run: |
           ls -al
           ls -al ..
           ls -al ${HOME}
+
+      - name: Run PostgreSQL regression tests
+        run: |
+          bash -x run-postgres-regression.bash
