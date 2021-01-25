@@ -6,7 +6,19 @@ ENVOY_BINARY="${PWD}/envoy/bazel-bin/source/exe/envoy-static"
 for ENVOY_CONF in *.yaml
 do
     "${ENVOY_BINARY}" -c "${ENVOY_CONF}" &
-    ENVOY_PID=$(pidof envoy)
+
+    if [ $? -ne 0 ]
+    then
+        exit $?
+    fi
+
+    while ! pidof envoy-static ;
+    do
+        echo "Waiting envoy to start ..."
+        sleep 1
+    done
+    ENVOY_PID=$(pidof envoy-static)
+    sleep 5
 
     cd "${PWD}"/postgres || exit 1
     (PGPORT=54322 PGHOST=localhost make installcheck) || exit 1
