@@ -56,7 +56,8 @@ jobs:
       - name: Checkout EnvoyProxy repository
         uses: actions/checkout@v2
         with:
-          repository: envoyproxy/envoy
+          repository: cpakulski/envoy
+          ref: 10942_1
           path: envoy
           fetch-depth: 2
 
@@ -70,24 +71,6 @@ jobs:
           bazelisk build -c fastbuild --spawn_strategy=local \
             --discard_analysis_cache --nouse_action_cache --config clang \
             --config libc++ //source/exe:envoy-static
-
-      # - name: Run EnvoyProxy
-      #   run: |
-      #     ./envoy/bazel-bin/source/exe/envoy-static -c envoy_postgres.yaml &
-
-      # - name: Install getenvoy
-      #   run: curl -L https://getenvoy.io/cli | bash -s -- -b .
-
-      # - name: Run EnvoyProxy
-      #   run: |
-      #     ./getenvoy fetch standard:1.17.0
-      #     ./getenvoy run standard:1.17.0 -- -c envoy_postgres.yaml &
-
-      - name: ls
-        run: |
-          ls -al
-          ls -al ..
-          ls -al ${HOME}
 
       - name: Run PostgreSQL regression tests
         run: |

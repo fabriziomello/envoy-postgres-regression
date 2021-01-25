@@ -5,6 +5,7 @@ ENVOY_BINARY="${PWD}/envoy/bazel-bin/source/exe/envoy-static"
 
 for ENVOY_CONF in *.yaml
 do
+    echo "[$(date +'%Y-%m-%d %H:%M')] Start running Envoy+Postgres over configuration file ${ENVOY_CONF}"
     "${ENVOY_BINARY}" -c "${ENVOY_CONF}" &
 
     if [ $? -ne 0 ]
@@ -27,5 +28,6 @@ do
 
     kill "${ENVOY_PID}" || exit 1
     sleep 2
+    echo "[$(date +'%Y-%m-%d %H:%M')] Finish running Envoy+Postgres over configuration file ${ENVOY_CONF}"
 done
 exit 0
