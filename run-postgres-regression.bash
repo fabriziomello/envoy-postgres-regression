@@ -23,7 +23,7 @@ do
 
     cd "${CURRENT_DIRECTORY}"/postgres || exit 1
     (PGPORT=54322 PGHOST=localhost PGSSLMODE=require make installcheck) || exit 1
-    (PGPORT=54322 PGHOST=localhost PGSSLMODE=require mmake -C contrib installcheck) || exit 1
+    (PGPORT=54322 PGHOST=localhost PGSSLMODE=require make -C contrib installcheck) || exit 1
     cd "${CURRENT_DIRECTORY}" || exit 1
 
     kill "${ENVOY_PID}" || exit 1
