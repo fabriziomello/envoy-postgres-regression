@@ -15,7 +15,7 @@ jobs:
           sudo apt-get install -y bison flex zlib1g zlib1g-dev pkg-config \
             libssl-dev libreadline-dev libtool cmake automake autoconf make \
             ninja-build curl unzip virtualenv openjdk-11-jdk build-essential \
-            libc++1
+            libc++1 openssl
           mkdir -p ${HOME}/bin/clang10
           cd ${HOME}/bin/clang10
           wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
@@ -51,6 +51,11 @@ jobs:
           mkdir /tmp/data
           chmod 0700 /tmp/data
           /tmp/pgsql/bin/initdb -D /tmp/data -A trust
+          openssl req -new -x509 -days 3650 -nodes -text -out /tmp/data/server.crt -keyout /tmp/data/server.key -subj "/CN=regress.envoyproxy.local"
+          chmod og-rwx /tmp/data/server.key
+          openssl req -new -nodes -text -out /tmp/data/root.csr -keyout /tmp/data/root.key -subj "/CN=root.envoyproxy.local"
+          chmod og-rwx /tmp/data/root.key
+          echo "ssl = on" >> /tmp/data/postgresql.conf
           /tmp/pgsql/bin/pg_ctl -D /tmp/data -l /tmp/data/postgresql.log start
 
       - name: Checkout EnvoyProxy repository
