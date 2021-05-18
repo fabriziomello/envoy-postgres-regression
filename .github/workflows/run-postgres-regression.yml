@@ -61,8 +61,8 @@ jobs:
       - name: Checkout EnvoyProxy repository
         uses: actions/checkout@v2
         with:
-          repository: envoyproxy/envoy
-          ref: release/v1.18
+          repository: cpakulski/envoy
+          ref: issue/12340
           path: envoy
           fetch-depth: 2
 
