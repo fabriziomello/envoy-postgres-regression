@@ -1,7 +1,15 @@
 ---
 name: Run PostgreSQL Regression Tests
 
-on: [push, workflow_dispatch]
+on: 
+  schedule:
+    # run daily 20:00 on main branch
+    - cron: '0 20 * * *'
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   pg-regression:
@@ -61,8 +69,8 @@ jobs:
       - name: Checkout EnvoyProxy repository
         uses: actions/checkout@v2
         with:
-          repository: cpakulski/envoy
-          ref: issue/12340
+          repository: envoyproxy/envoy
+          ref: main
           path: envoy
           fetch-depth: 2
 
