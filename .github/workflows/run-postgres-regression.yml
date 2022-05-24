@@ -24,12 +24,12 @@ jobs:
             libssl-dev libreadline-dev libtool cmake automake autoconf make \
             ninja-build curl unzip virtualenv openjdk-11-jdk build-essential \
             libc++1 openssl
-          mkdir -p ${HOME}/bin/clang10
-          cd ${HOME}/bin/clang10
-          wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-          tar -xf clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
+          mkdir -p ${HOME}/bin/clang14
+          cd ${HOME}/bin/clang14
+          wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.0/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+          tar -xf clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
             --strip-components 1
-          export PATH=${HOME}/bin/clang10/bin:$PATH
+          export PATH=${HOME}/bin/clang14/bin:$PATH
 
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -79,7 +79,7 @@ jobs:
           ls -al && ls -al bin && ls -al bin/clang10
           export PATH=${HOME}/bin/clang10/bin:$PATH
           cd envoy
-          bazel/setup_clang.sh ${HOME}/bin/clang10
+          bazel/setup_clang.sh ${HOME}/bin/clang14
           bazelisk shutdown
           bazelisk build -c fastbuild --spawn_strategy=local \
             --discard_analysis_cache --nouse_action_cache --config clang \
